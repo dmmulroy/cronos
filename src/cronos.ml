@@ -158,64 +158,54 @@ module Duration = struct
 
   let of_milliseconds milliseconds =
     let years =
-      Float.(
-        to_int
-          (floor (of_int milliseconds /. of_int Constants.milliseconds_in_year)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_year
+      |> Float.floor |> Float.to_int
     in
     let milliseconds =
       milliseconds - (Constants.milliseconds_in_year * years)
     in
 
     let months =
-      Float.(
-        to_int
-          (floor
-             (of_int milliseconds /. of_int Constants.milliseconds_in_month)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_month
+      |> Float.floor |> Float.to_int
     in
     let milliseconds =
       milliseconds - (Constants.milliseconds_in_month * months)
     in
 
     let days =
-      Float.(
-        to_int
-          (floor (of_int milliseconds /. of_int Constants.milliseconds_in_day)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_day
+      |> Float.floor |> Float.to_int
     in
     let milliseconds = milliseconds - (Constants.milliseconds_in_day * days) in
 
     let hours =
-      Float.(
-        to_int
-          (floor (of_int milliseconds /. of_int Constants.milliseconds_in_hour)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_hour
+      |> Float.floor |> Float.to_int
     in
     let milliseconds =
       milliseconds - (Constants.milliseconds_in_hour * hours)
     in
 
     let hours =
-      Float.(
-        to_int
-          (floor (of_int milliseconds /. of_int Constants.milliseconds_in_hour)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_hour
+      |> Float.floor |> Float.to_int
     in
     let milliseconds =
       milliseconds - (Constants.milliseconds_in_hour * hours)
     in
 
     let minutes =
-      Float.(
-        to_int
-          (floor
-             (of_int milliseconds /. of_int Constants.milliseconds_in_minute)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_minute
+      |> Float.floor |> Float.to_int
     in
     let milliseconds =
       milliseconds - (Constants.milliseconds_in_minute * minutes)
     in
 
     let seconds =
-      Float.(
-        to_int
-          (floor
-             (of_int milliseconds /. of_int Constants.milliseconds_in_second)))
+      Float.of_int milliseconds /. Float.of_int Constants.milliseconds_in_second
+      |> Float.floor |> Float.to_int
     in
     let milliseconds =
       milliseconds - (Constants.milliseconds_in_second * seconds)
@@ -226,43 +216,30 @@ module Duration = struct
 
   let to_milliseconds
       { years; months; days; hours; minutes; seconds; milliseconds } =
-    let years_ms =
-      years
-      |> Option.fold
-           ~some:(fun years -> years * Constants.milliseconds_in_year)
-           ~none:0
+    let years_milliseconds =
+      Option.fold years ~some:(Int.mul Constants.milliseconds_in_year) ~none:0
     in
-    let months_ms =
-      months
-      |> Option.fold
-           ~some:(fun months -> months * Constants.milliseconds_in_month)
-           ~none:0
+    let months_milliseconds =
+      Option.fold months ~some:(Int.mul Constants.milliseconds_in_month) ~none:0
     in
-    let days_ms =
-      days
-      |> Option.fold
-           ~some:(fun days -> days * Constants.milliseconds_in_day)
-           ~none:0
+    let days_milliseconds =
+      Option.fold days ~some:(Int.mul Constants.milliseconds_in_day) ~none:0
     in
-    let hours_ms =
-      hours
-      |> Option.fold
-           ~some:(fun hours -> hours * Constants.milliseconds_in_hour)
-           ~none:0
+    let hours_milliseconds =
+      Option.fold hours ~some:(Int.mul Constants.milliseconds_in_hour) ~none:0
     in
-    let minutes_ms =
-      minutes
-      |> Option.fold
-           ~some:(fun minutes -> minutes * Constants.milliseconds_in_minute)
-           ~none:0
+    let minutes_milliseconds =
+      Option.fold minutes
+        ~some:(Int.mul Constants.milliseconds_in_minute)
+        ~none:0
     in
-    let seconds_ms =
-      seconds
-      |> Option.fold
-           ~some:(fun seconds -> seconds * Constants.milliseconds_in_second)
-           ~none:0
+    let seconds_milliseconds =
+      Option.fold seconds
+        ~some:(Int.mul Constants.milliseconds_in_second)
+        ~none:0
     in
-    years_ms + months_ms + days_ms + hours_ms + minutes_ms + seconds_ms
+    years_milliseconds + months_milliseconds + days_milliseconds
+    + hours_milliseconds + minutes_milliseconds + seconds_milliseconds
     + Option.value ~default:0 milliseconds
   ;;
 
@@ -297,4 +274,13 @@ module Duration = struct
     | true -> Ok result
     | false -> Error Negative_duration
   ;;
+end
+
+module Interval = struct
+  type t = { start : date; end' : date }
+
+  let make ~start ~end' = { start; end' }
+  let start interval = interval.start
+  let end' interval = interval.end'
+  let are_overlapping ~comparison interval = failwith "todo"
 end

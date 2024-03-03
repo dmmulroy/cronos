@@ -45,11 +45,11 @@ end
 
 module Interval : sig
   (* opaque  *)
-  type t = { start : date; end' : date }
+  type t
 
   val start : t -> date
   val end' : t -> date
-  val are_overlapping : t -> t -> bool
+  val are_overlapping : comparison:t -> t -> bool
   val each_millisecond : t -> date list
   val each_second : t -> date list
   val each_minute : t -> date list
