@@ -9,17 +9,7 @@ type format
 type error
 
 module Duration : sig
-  (* opaque  *)
-  type t = {
-    milliseconds : int option;
-    seconds : int option;
-    minutes : int option;
-    hours : int option;
-    days : int option;
-    weeks : int option;
-    months : int option;
-    years : int option;
-  }
+  type t
 
   val make :
     ?milliseconds:int ->
@@ -50,7 +40,6 @@ module Duration : sig
   val hours : t -> int
   val minutes : t -> int
   val months : t -> int
-  val weeks : t -> int
   val years : t -> int
 end
 

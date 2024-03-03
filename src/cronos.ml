@@ -10,7 +10,7 @@ type date = {
 }
 
 type format
-type error = Invalid_date
+type error = Invalid_date | Negative_duration
 
 module Constants = struct
   (** Collection of useful date constants. *)
@@ -266,12 +266,35 @@ module Duration = struct
     + Option.value ~default:0 milliseconds
   ;;
 
-  let to_milliseconds duration = failwith "todo"
-  let equal ~comparison duration = failwith "todo"
-  let gt ~comparison duration = failwith "todo"
-  let gte ~comparison duration = failwith "todo"
-  let lt ~comparison duration = failwith "todo"
-  let lte ~comparison duration = failwith "todo"
-  let add ~amount duration = failwith "todo"
-  let subtract ~amount duration = failwith "todo"
+  let equal ~comparison duration = comparison = duration
+
+  let gt ~comparison duration =
+    to_milliseconds duration > to_milliseconds comparison
+  ;;
+
+  let gte ~comparison duration =
+    to_milliseconds duration >= to_milliseconds comparison
+  ;;
+
+  let lt ~comparison duration =
+    to_milliseconds duration < to_milliseconds comparison
+  ;;
+
+  let lte ~comparison duration =
+    to_milliseconds duration <= to_milliseconds comparison
+  ;;
+
+  let add ~amount duration =
+    of_milliseconds (to_milliseconds amount + to_milliseconds duration)
+  ;;
+
+  let subtract ~amount duration =
+    let result_milliseconds =
+      to_milliseconds amount - to_milliseconds duration
+    in
+    let result = of_milliseconds result_milliseconds in
+    match result_milliseconds >= 0 with
+    | true -> Ok result
+    | false -> Error Negative_duration
+  ;;
 end
